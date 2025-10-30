@@ -1,0 +1,190 @@
+<html>
+<head>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #222222;
+            color: #ffffff;
+        }
+        #controls { 
+            margin-bottom: 20px; 
+            padding: 15px; 
+            background: #2d2d2d; 
+            border-radius: 5px;
+            border: 1px solid #404040;
+        }
+        select { 
+            padding: 8px; 
+            margin: 5px; 
+            font-size: 14px;
+            background-color: #3d3d3d;
+            color: #ffffff;
+            border: 1px solid #555555;
+            border-radius: 4px;
+        }
+        button { 
+            padding: 8px 15px; 
+            margin: 5px; 
+            cursor: pointer; 
+            background: #10b981; 
+            color: white; 
+            border: none; 
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        button:hover { 
+            background: #059669; 
+        }
+        button:last-of-type {
+            background: #6b7280;
+        }
+        button:last-of-type:hover {
+            background: #4b5563;
+        }
+        #legend { 
+            margin-bottom: 15px; 
+            padding: 10px; 
+            background: #2d2d2d; 
+            border: 1px solid #404040; 
+            border-radius: 5px;
+        }
+        #legend span { 
+            margin-right: 15px; 
+        }
+        #mynetwork { 
+            border: 1px solid #404040;
+            background-color: #222222;
+        }
+        label {
+            color: #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <div id="legend">
+        <strong>Legend:</strong>
+        <span>● Talk</span>
+        <span>▲ Workshop</span>
+        <span>■ Track Category</span>
+        <span>◆ Tag</span>
+    </div>
+    
+    <div id="controls">
+        <label>Date: 
+            <select id="dateFilter">
+                <option value="all">All Dates</option>
+                {date_options}
+            </select>
+        </label>
+        
+        <label>Type: 
+            <select id="typeFilter">
+                <option value="all">All Types</option>
+                {type_options}
+            </select>
+        </label>
+        
+        <label>Track: 
+            <select id="trackFilter">
+                <option value="all">All Tracks</option>
+                {track_options}
+            </select>
+        </label>
+        
+        <label>Tag: 
+            <select id="tagFilter">
+                <option value="all">All Tags</option>
+                {tag_options}
+            </select>
+        </label>
+        
+        <button onclick="applyFilters()">Apply Filters</button>
+        <button onclick="resetFilters()">Reset</button>
+    </div>
+    
+    <div id="mynetwork"></div>
+    
+    <script>
+        // Store initial data after network is stabilized
+        var storedNodes = [];
+        var storedEdges = [];
+        var isInitialized = false;
+        
+        // Wait for network stabilization, then store the data
+        function initializeFilters() {
+            if (typeof nodes !== 'undefined' && typeof edges !== 'undefined' && !isInitialized) {
+                storedNodes = nodes.get();
+                storedEdges = edges.get();
+                isInitialized = true;
+            } else if (!isInitialized) {
+                setTimeout(initializeFilters, 200);
+            }
+        }
+        
+        // Start trying to initialize after page load
+        setTimeout(initializeFilters, 500);
+        
+        function applyFilters() {
+            if (!isInitialized) {
+                alert('Graph is still loading, please wait...');
+                return;
+            }
+            
+            const dateFilter = document.getElementById('dateFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const trackFilter = document.getElementById('trackFilter').value;
+            const tagFilter = document.getElementById('tagFilter').value;
+            
+            const filteredNodes = storedNodes.filter(node => {
+                // Always keep track nodes and tag nodes visible
+                if (!node.date) return true;
+                
+                const dateMatch = dateFilter === 'all' || node.date === dateFilter;
+                const typeMatch = typeFilter === 'all' || node.type === typeFilter;
+                const trackMatch = trackFilter === 'all' || node.track === trackFilter;
+                
+                // For tag filter, we need to check if this session connects to the selected tag
+                let tagMatch = true;
+                if (tagFilter !== 'all') {
+                    const targetTagNode = 'tag_' + tagFilter;
+                    // Check if any edge connects this node to the selected tag
+                    tagMatch = storedEdges.some(edge => 
+                        (edge.from === node.id && edge.to === targetTagNode) ||
+                        (edge.to === node.id && edge.from === targetTagNode)
+                    );
+                }
+                
+                return dateMatch && typeMatch && trackMatch && tagMatch;
+            });
+            
+            const filteredNodeIds = new Set(filteredNodes.map(n => n.id));
+            const filteredEdges = storedEdges.filter(edge => 
+                filteredNodeIds.has(edge.from) && filteredNodeIds.has(edge.to)
+            );
+            
+            nodes.clear();
+            edges.clear();
+            nodes.add(filteredNodes);
+            edges.add(filteredEdges);
+        }
+        
+        function resetFilters() {
+            if (!isInitialized) {
+                alert('Graph is still loading, please wait...');
+                return;
+            }
+            
+            document.getElementById('dateFilter').value = 'all';
+            document.getElementById('typeFilter').value = 'all';
+            document.getElementById('trackFilter').value = 'all';
+            document.getElementById('tagFilter').value = 'all';
+            nodes.clear();
+            edges.clear();
+            nodes.add(storedNodes);
+            edges.add(storedEdges);
+        }
+    </script>
+</body>
+</html>

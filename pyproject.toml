@@ -1,0 +1,10 @@
+[project]
+name = "foss4g-network"
+version = "0.1.0"
+description = "Make an interactive network graph for FOSS4GNA Talks, Workshops, and Topics"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "pandas>=2.3.3",
+    "pyvis>=0.3.2",
+]
