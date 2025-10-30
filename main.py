@@ -2,8 +2,21 @@ import pandas as pd
 from pyvis.network import Network
 
 COLORS = [
-    '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4',
-    '#f97316', '#14b8a6', '#6366f1', '#84cc16', '#f43f5e', '#a855f7'
+    '#3b82f6',  # Blue
+    '#10b981',  # Emerald
+    '#f59e0b',  # Amber
+    '#ec4899',  # Pink
+    '#8b5cf6',  # Violet
+    '#06b6d4',  # Cyan
+    '#f97316',  # Orange
+    '#14b8a6',  # Teal
+    '#6366f1',  # Indigo
+    '#84cc16',  # Lime
+    '#f43f5e',  # Rose
+    '#a855f7',  # Purple
+    '#22d3ee',  # Sky
+    '#fbbf24',  # Yellow
+    '#4ade80'   # Green
 ]
 
 def read_csv(input_csv):
@@ -20,8 +33,8 @@ def get_track_colors(tracks, colors):
 def create_network():
     """Create and configure a pyvis Network object."""
     net = Network(height='800px', width='100%', bgcolor='#222222', font_color='white')
-    net.barnes_hut(gravity=-8000, central_gravity=0.3, spring_length=200)
-    # net.force_atlas_2based(gravity=-50, central_gravity=0.01, spring_length=100, spring_strength=0.08, damping=0.4, overlap=0)
+    # net.barnes_hut(gravity=-8000, central_gravity=0.3, spring_length=200)
+    net.force_atlas_2based(gravity=-50, central_gravity=0.01, spring_length=100, spring_strength=0.08, damping=0.4, overlap=0)
     return net
 
 def add_track_nodes(net, track_colors):

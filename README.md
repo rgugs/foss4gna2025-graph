@@ -5,6 +5,7 @@
 There are over 120 and workshops and talks at the 2025 FOSS4GNA Conference in Reston, VA (November 3-5), and the system limits submitting talk and workshops into a single track when they often fit multiple tracks. I wanted a better understanding of the options, so I decided to do some extra visualization. This was also my first time using Claude AI. It definitely sped up the data preparation. For a higher stakes project I would definitely do more QC on the data from the amount of wrangling I had to do with the Python code, but being that this is a low risk situation to not do that, I didn't do very much data QC.
 
 ## Data Preparation
+
 1. Workshops don't have Tracks, so I assigned those to the best of my understanding of the topic.
 2. I used Claude AI to analyze the talk/workshop descriptions and abstracts and had it assign up to 3 additional tracks it could also fit into.
 3. I did some very brief data QC, but I make no promises there are not errors.
