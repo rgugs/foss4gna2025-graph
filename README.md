@@ -1,5 +1,7 @@
 # FOSS4GNA 2025 Graph Visualizer
 
+[View Interactive Graph](https://www.rachelgugler.com/projects/2025-10-29_foss4g_graph_map/)
+
 There are over 120 and workshops and talks at the 2025 FOSS4GNA Conference in Reston, VA (November 3-5), and the system limits submitting talk and workshops into a single track when they often fit multiple tracks. I wanted a better understanding of the options, so I decided to do some extra visualization. This was also my first time using Claude AI. It definitely sped up the data preparation. For a higher stakes project I would definitely do more QC on the data from the amount of wrangling I had to do with the Python code, but being that this is a low risk situation to not do that, I didn't do very much data QC.
 
 ## Data Preparation
